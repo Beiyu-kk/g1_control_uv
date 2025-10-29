@@ -1,0 +1,36 @@
+[project]
+name = "g1_control"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "logging-mp>=0.1.6",
+    "numpy==1.26.4",
+    "unitree-sdk2-python",
+    "zmq>=0.0.0",
+    "matplotlib==3.7.5",
+    "rerun-sdk==0.20.1",
+    "meshcat==0.3.2",
+    "sshkeyboard==2.3.1",
+    "casadi",
+
+
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = []
+lint = []
+
+[tool.uv.workspace]
+members = [
+    "submodules/unitree_sdk2_python",
+]
+
+[tool.uv.sources]
+unitree-sdk2-python = { workspace = true }
+
