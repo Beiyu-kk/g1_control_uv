@@ -1,4 +1,4 @@
-from ipc import IPC_Server
+from g1_control.p2.ipc import IPC_Server
 import logging_mp
 logging_mp.basic_config(level=logging_mp.INFO)
 logger_mp = logging_mp.get_logger(__name__)

@@ -7,13 +7,9 @@ requires-python = ">=3.10"
 dependencies = [
     "logging-mp>=0.1.6",
     "numpy==1.26.4",
-    "unitree-sdk2-python",
     "zmq>=0.0.0",
-    "matplotlib==3.7.5",
-    "rerun-sdk==0.20.1",
     "meshcat==0.3.2",
-    "sshkeyboard==2.3.1",
-    "casadi",
+    "matplotlib==3.7.5",
 
 
 ]

@@ -1,5 +1,5 @@
-from robot_arm import *
-from ipc_example import *
+from g1_control.robot_arm.robot_arm import G1_29_ArmController
+from g1_control.robot_arm.robot_arm import g1_move_right_arm_to_start
 
 
 if __name__ == "__main__":
@@ -11,4 +11,6 @@ if __name__ == "__main__":
     if user_input.lower() == 's':
         q = arm.get_current_right_arm_q()
         dq = arm.get_current_right_arm_dq()
+    print(q)
+    print(dq)
     

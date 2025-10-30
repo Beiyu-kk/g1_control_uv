@@ -383,13 +383,13 @@ class G1_29_ArmController:
         return motor_index.value in wrist_motors
 
 
-def g1_move_right_arm_to_start():
+def g1_move_dual_arm_to_start():
     # from robot_arm_ik import G1_29_ArmIK
     from g1_control.robot_arm.robot_arm_ik import G1_29_ArmIK
     import pinocchio as pin 
 
     arm_ik = G1_29_ArmIK(Unit_Test = True, Visualization = False)
-    arm = G1_29_ArmController(simulation_mode=True)
+    arm = G1_29_ArmController(simulation_mode=False)
 
     # initial positon
     L_tf_target = pin.SE3(
@@ -427,6 +427,46 @@ def g1_move_right_arm_to_start():
             sol_q, sol_tauff = arm_ik.solve_ik(L_tf_target.homogeneous, R_tf_target.homogeneous, current_lr_arm_q, current_lr_arm_dq)
 
             arm.ctrl_dual_arm(sol_q, sol_tauff)
+            # arm.ctrl_right_arm(sol_q, sol_tauff)
+
+            step += 1
+            time.sleep(0.01)
+
+
+def g1_move_right_arm_to_start():
+    # from robot_arm_ik import G1_29_ArmIK
+    from g1_control.robot_arm.robot_arm_ik import G1_29_ArmIK
+    import pinocchio as pin 
+
+    arm_ik = G1_29_ArmIK(Unit_Test = True, Visualization = False)
+    arm = G1_29_ArmController(simulation_mode=False)
+
+    R_tf_target = pin.SE3(
+        pin.Quaternion(1, 0, 0, 0),
+        np.array([0.25, -0.25, 0.1]),
+    )
+
+    rotation_speed = 0.005  # Rotation speed in radians per iteration
+
+    # 运行到起始状态
+    user_input = input("Please enter the start signal (enter 's' to start the subsequent program): \n")
+    if user_input.lower() == 's':
+        step = 0
+        arm.speed_gradual_max()
+        # 运动到起始位姿
+        while step <= 120:
+            angle = rotation_speed * step
+            R_quat = pin.Quaternion(np.cos(angle / 2), 0, 0, np.sin(angle / 2))  # z axis
+            R_tf_target.translation += np.array([0.001, -0.001, 0.001])
+            R_tf_target.rotation = R_quat.toRotationMatrix()
+
+            current_r_arm_q  = arm.get_current_right_arm_q()
+            current_lr_arm_dq = arm.get_current_right_arm_dq()
+
+            sol_q, sol_tauff = arm_ik.solve_ik(L_tf_target.homogeneous, R_tf_target.homogeneous, current_lr_arm_q, current_lr_arm_dq)
+
+            arm.ctrl_dual_arm(sol_q, sol_tauff)
+            # arm.ctrl_right_arm(sol_q, sol_tauff)
 
             step += 1
             time.sleep(0.01)

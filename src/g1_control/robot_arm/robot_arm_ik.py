@@ -1,15 +1,21 @@
 import casadi                                                                       
 import meshcat.geometry as mg
 import numpy as np
-import pin                            
+import pinocchio as pin                             
 import time
-from pin import casadi as cpin    
-from pin.visualize import MeshcatVisualizer   
+from pinocchio import casadi as cpin    
+from pinocchio.visualize import MeshcatVisualizer   
 
 import logging_mp
 logger_mp = logging_mp.get_logger(__name__)
 
-from g1_control.utils.weighted_moving_filter import WeightedMovingFilter
+from g1_control.robot_arm.weighted_moving_filter import WeightedMovingFilter
+
+
+from pathlib import Path
+import os  # 可选，用于额外检查
+current_file = Path(__file__)
+project_root = current_file.parent.parent.parent.parent
 
 class G1_29_ArmIK:
     def __init__(self, Unit_Test = False, Visualization = False):
@@ -17,12 +23,14 @@ class G1_29_ArmIK:
 
         self.Unit_Test = Unit_Test
         self.Visualization = Visualization
-
+        print(project_root / f'assets/g1/g1_body29_hand14.urdf')
         if not self.Unit_Test:
-            self.robot = pin.RobotWrapper.BuildFromURDF('../assets/g1/g1_body29_hand14.urdf', '../assets/g1/')
+            self.robot = pin.RobotWrapper.BuildFromURDF(project_root / f'assets/g1/g1_body29_hand14.urdf', project_root / f'assets/g1/')
         else:
-            self.robot = pin.RobotWrapper.BuildFromURDF('../../assets/g1/g1_body29_hand14.urdf', '../../assets/g1/') # for test
+            self.robot = pin.RobotWrapper.BuildFromURDF(f"{project_root / 'assets/g1/g1_body29_hand14.urdf'}", 
+                                                        f"{project_root / f'assets/g1/'}") # for test
 
+        print(project_root / f'assets/g1/g1_body29_hand14.urdf')
         self.mixed_jointsToLockIDs = [
                                         "left_hip_pitch_joint" ,
                                         "left_hip_roll_joint" ,
